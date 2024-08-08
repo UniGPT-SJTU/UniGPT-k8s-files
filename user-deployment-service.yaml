@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: user-service
+        image: user_service_image:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_URL
+          value: "jdbc:mysql://123.60.187.205:3311/unigpt_user"
+        - name: DB_USERNAME
+          value: "unigpt"
+        - name: DB_PASSWORD
+          value: "unigpt"
+        - name: PLUGIN_SERVICE_URL
+          value: "http://plugin-service:8080"
+        - name: BOT_SERVICE_URL
+          value: "http://bot-service:8080"
+        - name: CHAT_SERVICE_URL
+          value: "http://chat-service:8080"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  selector:
+    app: user-service
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8080
+  type: NodePort

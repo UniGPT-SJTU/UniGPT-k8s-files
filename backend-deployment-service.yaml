@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: unigpt-backend-app:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+          hostPort: 8080
+        env:
+        - name: DB_URL
+          value: "jdbc:mysql://123.60.187.205:3306/unigpt"
+        - name: DB_USERNAME
+          value: "unigpt"
+        - name: DB_PASSWORD
+          value: "Kiwi339bleavescreeper"
+        - name: OPENAI_API_BASE_URL
+          value: "https://api.openai.com"
+        - name: OPENAI_API_KEY
+          value: "sk-j101-s9eW29r08H38nPRyMia7T3BlbkFJom4ndaHHCjhWkRRp3lsG"
+        - name: CLAUDE_API_BASE_URL
+          value: "https://api.claude-Plus.top"
+        - name: CLAUDE_API_KEY
+          value: "sk-JAuS27IqZB15lJST6a76A0111e2d4eEb9d7aD0Bd34F20271"
+        - name: LLAMA_API_BASE_URL
+          value: "https://xqtd520qidong.com"
+        - name: LLAMA_API_KEY
+          value: "sk-hMdKUabqMiRM247Y2b23B02e8f484a9198D27cA2D66eAe4d"
+        - name: KIMI_API_BASE_URL
+          value: "https://api.moonshot.cn"
+        - name: KIMI_API_KEY
+          value: "sk-xn7ruJ2a0MYLAcheud6qVC87I6mx7b0wpFODccHCDW8oUWMg"
+        - name: POSTGRES_HOST
+          value: "123.60.187.205"
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_DB
+          value: "mydatabase"
+        - name: POSTGRES_USER
+          value: "bleaves"
+        - name: POSTGRES_PASSWORD
+          value: "bleaves"
+        - name: HTTP_PROXY_HOST
+          value: "127.0.0.1"
+        - name: HTTP_PROXY_PORT
+          value: "7890"
+        - name: FRONTEND_SERVER_URL
+          value: "http://123.60.187.205:30003"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - name: backend-port
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: NodePort
